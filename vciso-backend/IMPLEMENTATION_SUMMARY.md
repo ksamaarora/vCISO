@@ -123,7 +123,7 @@ vciso-backend/
 └── README.md
 ```
 
-## 🚀 How to Test
+## How to Test
 
 ### 1. Install Dependencies
 ```bash

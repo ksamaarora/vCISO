@@ -1,7 +1,25 @@
+# vciso-backend/app/models/plan.py
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
+# plan.py - Models for onboarding data and generated IR plans
+# This module defines Pydantic models for the onboarding data collected from users
+# and the structure of the generated incident response plans.
+
+# classes:
+
+# - ToolsData: Represents the technology tools used by the company.
+#                email, storage, communication, crm
+
+# - SecurityLead: Represents information about who handles security.
+#                type (dedicated, consultant, owner, none), name (if dedicated)
+
+# - OnboardingData: Represents the complete onboarding data collected from the user.
+#                companyName, employeeCount, industry, tools, currentSecurity, mainConcerns, securityLead
+
+# - GeneratedPlan: Represents the generated IR plan with its content and metadata.
+#                 markdown, metadata
 
 class ToolsData(BaseModel):
     """Technology tools used by the company"""

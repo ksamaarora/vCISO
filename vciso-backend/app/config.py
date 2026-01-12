@@ -1,11 +1,16 @@
+# vciso-backend/app/config.py
 from pydantic_settings import BaseSettings
 from typing import Optional
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# config.py - Application configuration settings
+# This module defines the application settings using Pydantic's BaseSettings.
+# It loads configuration values from environment variables and a .env file.
+# The Settings class includes various configuration options such as API keys,
+# environment settings, API prefixes, and LLM parameters.
 
+load_dotenv()
 
 class Settings(BaseSettings):
     """Application settings"""
@@ -25,6 +30,7 @@ class Settings(BaseSettings):
     OPENAI_MAX_TOKENS: int = int(os.getenv("OPENAI_MAX_TOKENS", "4000"))
     OPENAI_TEMPERATURE: float = float(os.getenv("OPENAI_TEMPERATURE", "0.7"))
     
+    # Pydantic Configuration
     class Config:
         env_file = ".env"
         case_sensitive = True

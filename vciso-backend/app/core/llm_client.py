@@ -4,6 +4,18 @@ from typing import Optional, Dict, Any
 import logging
 from app.config import settings
 
+# llm_client.py - Module for interacting with OpenAI API
+# This module provides a client for generating incident response plans using OpenAI's language models.
+# It handles API requests, responses, error handling, and usage logging for cost tracking.
+# The OpenAIClient class encapsulates the functionality to communicate with the OpenAI API asynchronously.
+# It includes methods to generate plans based on system and user prompts, and logs token usage for cost analysis.
+
+# How the code works:
+# 1. The OpenAIClient class initializes with API key, model, and max tokens from settings.
+# 2. The generate_plan method sends a request to the OpenAI API with system and user prompts.
+# 3. It processes the response to extract the generated plan text.
+# 4. It logs token usage for cost tracking based on the model used.
+
 logger = logging.getLogger(__name__)
 
 class OpenAIClient:
@@ -11,6 +23,8 @@ class OpenAIClient:
         if not settings.OPENAI_API_KEY:
             raise ValueError("OPENAI_API_KEY is not set in environment variables")
         # Initialize OpenAI client - let it handle http client creation internally
+        # Initialize with API key from settings
+        # Set model and max tokens from settings
         self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         self.model = settings.OPENAI_MODEL
         self.max_tokens = settings.OPENAI_MAX_TOKENS

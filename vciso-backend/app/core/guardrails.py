@@ -2,6 +2,15 @@
 import re
 from typing import Dict, Pattern
 
+# guardrails.py - Module for PII redaction and detection
+# PII redaction and detection utilities - in simple, it means removing or identifying personally identifiable information from text.
+# This module provides functions to redact common types of PII such as emails, phone numbers, SSNs, and credit card numbers.
+
+# How the code works:
+# 1. The PII_Redactor class initializes with regex patterns for different PII types.
+# 2. The redact method takes a text input and replaces any detected PII with a placeholder.
+# 3. The contains_pii method checks if the input text contains any PII.
+
 class PII_Redactor:
     def __init__(self):
         # Regex patterns for common PII

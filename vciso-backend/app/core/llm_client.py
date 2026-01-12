@@ -22,9 +22,6 @@ class OpenAIClient:
     def __init__(self):
         if not settings.OPENAI_API_KEY:
             raise ValueError("OPENAI_API_KEY is not set in environment variables")
-        # Initialize OpenAI client - let it handle http client creation internally
-        # Initialize with API key from settings
-        # Set model and max tokens from settings
         self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         self.model = settings.OPENAI_MODEL
         self.max_tokens = settings.OPENAI_MAX_TOKENS

@@ -1,6 +1,6 @@
 # /app/services/plan_generator.py
 from app.core.meta_prompting import MetaPromptEngine
-from app.core.llm_client import ClaudeClient
+from app.core.llm_client import OpenAIClient
 from app.core.guardrails import PII_Redactor
 from app.models.plan import OnboardingData, GeneratedPlan
 from datetime import datetime
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class PlanGeneratorService:
     def __init__(self):
         self.meta_engine = MetaPromptEngine()
-        self.llm_client = ClaudeClient()
+        self.llm_client = OpenAIClient()
         self.pii_redactor = PII_Redactor()
     
     async def generate(self, data: OnboardingData) -> GeneratedPlan:
@@ -26,7 +26,7 @@ class PlanGeneratorService:
         # Step 2: Apply guardrails (query classification)
         validated_prompt = self.meta_engine.apply_guardrails(user_prompt)
         
-        # Step 3: Call Claude API
+        # Step 3: Call OpenAI API
         plan_markdown = await self.llm_client.generate_plan(
             system_prompt=system_prompt,
             user_prompt=validated_prompt

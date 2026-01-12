@@ -140,7 +140,7 @@ Valid examples:
 - Create incident response documentation
 """
         
-        # In practice, you'd call Claude here to classify
+        # In practice, you'd call OpenAI here to classify
         # For now, assume valid (we'll add actual classification later)
         
         return prompt

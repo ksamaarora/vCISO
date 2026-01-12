@@ -119,7 +119,7 @@ async def test_plan_generator_structure():
             print("  - LLM client: ✓")
             print("  - PII redactor: ✓")
         except ValueError as e:
-            if "ANTHROPIC_API_KEY" in str(e):
+            if "OPENAI_API_KEY" in str(e):
                 print("⚠ API key not set (expected in test environment)")
                 print("✓ Service structure is correct")
             else:

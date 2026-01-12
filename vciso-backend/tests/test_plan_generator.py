@@ -34,7 +34,7 @@ class TestPlanGeneratorService:
     @pytest.mark.asyncio
     async def test_generate_plan_success(self, sample_data, mock_llm_response):
         """Test successful plan generation"""
-        with patch('app.services.plan_generator.ClaudeClient') as mock_client_class, \
+        with patch('app.services.plan_generator.OpenAIClient') as mock_client_class, \
              patch('app.services.plan_generator.PII_Redactor') as mock_redactor_class:
             
             # Setup mocks

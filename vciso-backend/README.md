@@ -6,7 +6,7 @@ A FastAPI-based application for generating customized Incident Response (IR) pla
 
 - **Onboarding Flow**: Collects company context (size, industry, tools, security posture, concerns)
 - **Meta-Prompting Engine**: Transforms user inputs into structured prompts for high-quality IR plan generation
-- **LLM Integration**: Uses Anthropic's Claude API to generate customized IR plans
+- **LLM Integration**: Uses OpenAI's API to generate customized IR plans
 - **Guardrails**: PII redaction and safety checks
 - **RESTful API**: FastAPI-based endpoints for plan generation
 
@@ -15,7 +15,7 @@ A FastAPI-based application for generating customized Incident Response (IR) pla
 ### Prerequisites
 
 - Python 3.11+
-- Anthropic API key
+- OpenAI API key
 
 ### Installation
 
@@ -37,12 +37,12 @@ pip install -r requirements.txt
 
 4. Create a `.env` file in the `vciso-backend` directory:
 ```env
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
 ENVIRONMENT=development
 LOG_LEVEL=INFO
-CLAUDE_MODEL=claude-sonnet-4-20250514
-CLAUDE_MAX_TOKENS=4000
-CLAUDE_TEMPERATURE=0.7
+OPENAI_MODEL=gpt-4o
+OPENAI_MAX_TOKENS=4000
+OPENAI_TEMPERATURE=0.7
 ```
 
 ## Running the Application
@@ -113,7 +113,7 @@ vciso-backend/
 │   │           └── plans.py
 │   ├── core/
 │   │   ├── guardrails.py      # PII redaction
-│   │   ├── llm_client.py      # Claude API client
+│   │   ├── llm_client.py      # OpenAI API client
 │   │   └── meta_prompting.py  # Prompt engineering
 │   ├── models/
 │   │   └── plan.py            # Pydantic models

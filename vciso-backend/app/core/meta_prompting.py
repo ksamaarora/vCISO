@@ -2,6 +2,20 @@
 from typing import Dict, Any
 from app.models.plan import OnboardingData, SecurityLead
 
+# meta_prompting.py - Module for constructing meta-prompts for IR plan generation
+# This module defines the MetaPromptEngine class which builds system and user prompts
+# for generating incident response plans using LLMs. It incorporates business context
+# from onboarding data and applies guardrails to ensure safe and relevant outputs.
+# The prompts are designed to guide the LLM in producing actionable, tailored IR plans.
+
+# Meta Prompting: In simple terms, it means creating structured prompts that help the AI generate useful and relevant responses.
+
+# How the code works:
+# 1. The MetaPromptEngine class initializes with a base system prompt.
+# 2. The build_prompt method constructs a user prompt by injecting onboarding data context.
+# 3. The apply_guardrails method adds safety checks to the prompts to prevent misuse.
+# 4. The final prompts are used by the LLM client to generate the IR plan.
+
 class MetaPromptEngine:
     def __init__(self):
         self.system_prompt = self._load_system_prompt()

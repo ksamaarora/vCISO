@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# vCISO Frontend
+
+A modern Next.js frontend for the Virtual CISO application that generates customized Incident Response Plans.
+
+## Features
+
+- ✨ **Beautiful UI**: Modern, responsive design with Tailwind CSS
+- 📝 **6-Step Onboarding Flow**: Guided questionnaire with progress tracking
+- ✅ **Form Validation**: Real-time validation using Zod and React Hook Form
+- 📄 **Plan Preview**: View generated plans with Markdown rendering
+- 📥 **Export Options**: Export plans as PDF or copy to clipboard
+- 🎯 **Conversational UX**: User-friendly prompts and clear instructions
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ and npm/yarn
+- Backend API running (see `vciso-backend` README)
+
+### Installation
+
+1. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+2. Create a `.env.local` file:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+3. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+vciso-frontend/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx              # Home page
+│   │   ├── create-plan/
+│   │   │   └── page.tsx          # Onboarding flow
+│   │   ├── layout.tsx            # Root layout
+│   │   └── globals.css           # Global styles
+│   ├── components/
+│   │   └── plan/
+│   │       └── PlanPreview.tsx   # Plan display component
+│   └── lib/
+│       ├── validation.ts         # Zod schemas
+│       └── api-client.ts         # API client
+├── public/                       # Static assets
+└── package.json
+```
 
-## Learn More
+## Onboarding Flow
 
-To learn more about Next.js, take a look at the following resources:
+The application guides users through 6 steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Company Basics**: Name and employee count
+2. **Industry**: Select from predefined industries
+3. **Technology Tools**: Email, storage, communication, CRM tools
+4. **Current Security**: Existing security measures
+5. **Main Concerns**: Primary security concerns
+6. **Security Lead**: Who handles IT/security
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Technologies
 
-## Deploy on Vercel
+- **Next.js 16**: React framework with App Router
+- **React Hook Form**: Form state management
+- **Zod**: Schema validation
+- **Tailwind CSS**: Styling
+- **Axios**: HTTP client
+- **React Markdown**: Markdown rendering
+- **jsPDF & html2canvas**: PDF export
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Building for Production
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm start
+```
+
+## Environment Variables
+
+- `NEXT_PUBLIC_API_URL`: Backend API URL (default: `http://localhost:8000`)
+
+## License
+
+MIT

@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from app.config import settings
-from app.api.v1.endpoints import plans
+from app.api.v1.endpoints import plans, gap_analysis
 
 # Configure logging
 logging.basicConfig(
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="vCISO API",
     description="Virtual CISO - Incident Response Plan Generator",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 # CORS middleware
@@ -34,6 +34,13 @@ app.include_router(
     plans.router,
     prefix=settings.API_V1_PREFIX + "/plans",
     tags=["plans"]
+)
+
+# Gap analysis router
+app.include_router(
+    gap_analysis.router,
+    prefix=settings.API_V1_PREFIX + "/gap-analysis",
+    tags=["gap-analysis"]
 )
 
 

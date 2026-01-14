@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { 
   onboardingSchema, 
   OnboardingData,
@@ -61,11 +60,9 @@ export default function CreatePlanPage() {
     control,
     watch,
     formState: { errors },
-    trigger,
     setError: setFormFieldError,
     clearErrors,
   } = useForm<OnboardingData>({
-    resolver: zodResolver(onboardingSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -88,6 +85,19 @@ export default function CreatePlanPage() {
   });
 
   const watchedValues = watch();
+
+  const applyZodErrors = (zodError: any) => {
+    if (!zodError?.errors?.length) return;
+
+    // Clear any previous form-level error
+    setError(zodError.errors[0]?.message || 'Please complete all required fields');
+
+    for (const issue of zodError.errors) {
+      const path = issue.path?.join('.') || '';
+      if (!path) continue;
+      setFormFieldError(path as any, { type: 'validation', message: issue.message });
+    }
+  };
 
   const handleNext = async () => {
     let stepSchema;
@@ -132,40 +142,16 @@ export default function CreatePlanPage() {
     });
 
     // Validate using step-specific schema (not the full schema)
-    try {
-      stepSchema.parse(stepData);
-      // Clear any previous errors
-      clearErrors(fieldsToValidate as any);
-      setError(null);
-      // Move to next step
-      setStep(step + 1);
-    } catch (err: any) {
-      // Show validation errors from Zod
-      if (err.errors && err.errors.length > 0) {
-        const firstError = err.errors[0];
-        const fieldPath = firstError.path.join('.');
-        const errorMessage = firstError.message;
-        
-        // Set form-level error
-        setError(errorMessage);
-        
-        // Set field-level errors for React Hook Form
-        if (fieldPath.includes('.')) {
-          const [parent, child] = fieldPath.split('.');
-          setFormFieldError(parent as any, {
-            type: 'validation',
-            message: errorMessage,
-          });
-        } else {
-          setFormFieldError(fieldPath as any, {
-            type: 'validation',
-            message: errorMessage,
-          });
-        }
-      } else {
-        setError('Please complete all required fields');
-      }
+    const parsed = stepSchema.safeParse(stepData);
+    if (!parsed.success) {
+      applyZodErrors(parsed.error);
+      return;
     }
+
+    // Clear step-related errors and advance
+    clearErrors(fieldsToValidate as any);
+    setError(null);
+    setStep(step + 1);
   };
 
   const handleBack = () => {
@@ -174,10 +160,17 @@ export default function CreatePlanPage() {
   };
 
   const onSubmit = async (data: OnboardingData) => {
+    // Final validation (full schema) before calling backend
+    const parsed = onboardingSchema.safeParse(data);
+    if (!parsed.success) {
+      applyZodErrors(parsed.error);
+      return;
+    }
+
     setIsGenerating(true);
     setError(null);
     try {
-      const plan = await generatePlan(data);
+      const plan = await generatePlan(parsed.data);
       setGeneratedPlan(plan.plan);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -187,8 +180,13 @@ export default function CreatePlanPage() {
   };
 
   if (generatedPlan) {
-    return <PlanPreview markdown={generatedPlan} />;
-  }
+  return (
+    <PlanPreview 
+      markdown={generatedPlan} 
+      companyName={watchedValues.companyName} 
+    />
+  );
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -563,8 +561,8 @@ export default function CreatePlanPage() {
                     <label className="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors">
                       <input
                         type="radio"
-                        {...field}
-                        value="dedicated"
+                        checked={field.value === 'dedicated'}
+                        onChange={() => field.onChange('dedicated')}
                         className="mr-3 h-4 w-4 text-blue-600"
                       />
                       <span className="text-gray-700">Dedicated IT person</span>
@@ -582,8 +580,8 @@ export default function CreatePlanPage() {
                     <label className="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors">
                       <input
                         type="radio"
-                        {...field}
-                        value="consultant"
+                        checked={field.value === 'consultant'}
+                        onChange={() => field.onChange('consultant')}
                         className="mr-3 h-4 w-4 text-blue-600"
                       />
                       <span className="text-gray-700">External consultant</span>
@@ -592,8 +590,8 @@ export default function CreatePlanPage() {
                     <label className="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors">
                       <input
                         type="radio"
-                        {...field}
-                        value="owner"
+                        checked={field.value === 'owner'}
+                        onChange={() => field.onChange('owner')}
                         className="mr-3 h-4 w-4 text-blue-600"
                       />
                       <span className="text-gray-700">CEO/Owner</span>
@@ -602,8 +600,8 @@ export default function CreatePlanPage() {
                     <label className="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-blue-50 transition-colors">
                       <input
                         type="radio"
-                        {...field}
-                        value="none"
+                        checked={field.value === 'none'}
+                        onChange={() => field.onChange('none')}
                         className="mr-3 h-4 w-4 text-blue-600"
                       />
                       <span className="text-gray-700">No one specifically</span>

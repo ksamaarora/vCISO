@@ -1,7 +1,6 @@
 'use client';
 
 import { Gap, GapSeverity } from '@/types';
-import { AlertCircle, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
 
 interface GapCardProps {
   gap: Gap;
@@ -9,7 +8,7 @@ interface GapCardProps {
 
 const severityConfig = {
   [GapSeverity.CRITICAL]: {
-    icon: AlertCircle,
+    icon: '⚠️',
     bgColor: 'bg-red-50',
     borderColor: 'border-red-300',
     textColor: 'text-red-800',
@@ -17,7 +16,7 @@ const severityConfig = {
     label: 'Critical',
   },
   [GapSeverity.HIGH]: {
-    icon: AlertTriangle,
+    icon: '⚠️',
     bgColor: 'bg-orange-50',
     borderColor: 'border-orange-300',
     textColor: 'text-orange-800',
@@ -25,7 +24,7 @@ const severityConfig = {
     label: 'High',
   },
   [GapSeverity.MEDIUM]: {
-    icon: Info,
+    icon: 'ℹ️',
     bgColor: 'bg-yellow-50',
     borderColor: 'border-yellow-300',
     textColor: 'text-yellow-800',
@@ -33,7 +32,7 @@ const severityConfig = {
     label: 'Medium',
   },
   [GapSeverity.LOW]: {
-    icon: CheckCircle2,
+    icon: '✅',
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-300',
     textColor: 'text-blue-800',
@@ -44,7 +43,6 @@ const severityConfig = {
 
 export function GapCard({ gap }: GapCardProps) {
   const config = severityConfig[gap.severity];
-  const Icon = config.icon;
 
   return (
     <div
@@ -53,7 +51,7 @@ export function GapCard({ gap }: GapCardProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
-          <Icon className={`${config.textColor} w-6 h-6`} />
+          <span className={`${config.textColor} w-6 h-6 text-xl`}>{config.icon}</span>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">{gap.section}</h3>
             <span className={`${config.badgeColor} text-xs px-2 py-1 rounded-full font-medium`}>

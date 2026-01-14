@@ -4,9 +4,20 @@ import ReactMarkdown from 'react-markdown';
 import { useState } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { analyzeGaps } from '@/lib/api-client';
+import { GapAnalysisReport } from './GapAnalysisReport';
+import { GapAnalysisResult } from '@/types';
 
-export function PlanPreview({ markdown }: { markdown: string }) {
+interface PlanPreviewProps {
+  markdown: string;
+  companyName: string;
+}
+
+export function PlanPreview({ markdown, companyName }: PlanPreviewProps) {
   const [isExporting, setIsExporting] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [gapAnalysis, setGapAnalysis] = useState<GapAnalysisResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const exportToPDF = async () => {
     setIsExporting(true);
@@ -64,6 +75,30 @@ export function PlanPreview({ markdown }: { markdown: string }) {
     alert('Plan copied to clipboard!');
   };
 
+  const handleAnalyzeGaps = async () => {
+    setIsAnalyzing(true);
+    setError(null);
+    try {
+      const response = await analyzeGaps(markdown, companyName);
+      setGapAnalysis(response.gap_analysis);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to analyze plan');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  // If gap analysis is complete, show the report from iteration 2
+  if (gapAnalysis) {
+    return (
+      <GapAnalysisReport
+        analysis={gapAnalysis}
+        onBack={() => setGapAnalysis(null)}
+      />
+    );
+  }
+
+  // Default view: iteration 1 plan preview + iteration 2 actions
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
@@ -88,15 +123,29 @@ export function PlanPreview({ markdown }: { markdown: string }) {
               <button
                 onClick={exportToPDF}
                 disabled={isExporting}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 {isExporting ? 'Exporting...' : 'Export as PDF'}
               </button>
+              <button
+                onClick={handleAnalyzeGaps}
+                disabled={isAnalyzing}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center"
+              >
+                {isAnalyzing ? 'Analyzing…' : 'Analyze My Plan'}
+              </button>
             </div>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-800 text-sm">{error}</p>
+            </div>
+          )}
         </div>
 
-        {/* Plan Content */}
+        {/* Plan Content with styled Markdown (from iteration 1) */}
         <div
           id="plan-content"
           className="bg-white rounded-lg shadow-md p-8 prose prose-lg max-w-none"
@@ -149,3 +198,4 @@ export function PlanPreview({ markdown }: { markdown: string }) {
     </div>
   );
 }
+

@@ -1,21 +1,11 @@
 'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-
 interface ComplianceScoreProps {
   overallScore: number;
   frameworkCompliance: Record<string, number>;
 }
 
 export function ComplianceScore({ overallScore, frameworkCompliance }: ComplianceScoreProps) {
-  // Prepare data for pie chart
-  const chartData = Object.entries(frameworkCompliance).map(([framework, score]) => ({
-    name: framework,
-    value: score,
-  }));
-
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b'];
-
   // Determine overall score color
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
@@ -44,8 +34,8 @@ export function ComplianceScore({ overallScore, frameworkCompliance }: Complianc
         <div className="text-lg text-gray-600">{getScoreLabel(overallScore)}</div>
       </div>
 
-      {/* Framework Breakdown */}
-      <div className="mb-6">
+      {/* Framework Breakdown as progress bars (no charts) */}
+      <div className="mb-2">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Framework Breakdown</h3>
         <div className="space-y-3">
           {Object.entries(frameworkCompliance).map(([framework, score]) => (
@@ -63,30 +53,6 @@ export function ComplianceScore({ overallScore, frameworkCompliance }: Complianc
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Pie Chart */}
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, value }) => `${name}: ${value}`}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
       </div>
     </div>
   );

@@ -17,8 +17,8 @@ import os
 from pathlib import Path
 from typing import List, Dict, Any
 import logging
-from langchain.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 import hashlib
 
 from app.core.embeddings import EmbeddingService

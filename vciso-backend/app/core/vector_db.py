@@ -29,7 +29,7 @@ class VectorDBService:
                     metric="cosine",
                     spec=ServerlessSpec(
                         cloud="aws",
-                        region="us-west-2"
+                        region="us-east-1"
                     )
                 )
                 logger.info(f"Index {self.index_name} created successfully")
